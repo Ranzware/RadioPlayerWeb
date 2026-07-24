@@ -1,11 +1,15 @@
-const RADIO_NAME = 'Jailson Web Rádio';
+const RADIO_NAME = 'MP3Islam Quran Radio';
 
-// Change Stream URL Here, Supports, ICECAST, ZENO, SHOUTCAST, RADIOJAR and any other stream service.
-const URL_STREAMING = 'https://stream.zeno.fm/yn65fsaurfhvv';
+// AzuraCast station shortcode. Your public page is /public/quran_radio.
+const STATION_SHORTCODE = 'quran_radio';
 
-//API URL /
-const API_URL = 'https://api.twj.es/?url='+URL_STREAMING;
-const FALLBACK_API_URL = 'https://api.twj.es/metadata/?url=' + URL_STREAMING;
+// Change Stream URL Here. Supports ICECAST, ZENO, SHOUTCAST, RADIOJAR and any other stream service.
+const URL_STREAMING = 'https://radio.mp3islam.com/listen/' + STATION_SHORTCODE + '/radio.mp3';
+
+// AzuraCast now-playing API endpoint (native, no API key required).
+const API_URL = 'https://radio.mp3islam.com/api/nowplaying/' + STATION_SHORTCODE;
+// Fallback metadata API via twj.es in case the native endpoint is unreachable.
+const FALLBACK_API_URL = 'https://api.twj.es/metadata/?url=' + encodeURIComponent(URL_STREAMING);
 
 let userInteracted = true;
 
@@ -143,7 +147,7 @@ class Page {
                 const data = nowPlayingArtCache[cacheKey] || await getCoverData(songArtist, songTitle, defaultCoverArt, defaultCoverArt);
                 coverHistoric.style.backgroundImage = "url(" + (data.thumbnail || data.art || defaultCoverArt) + ")";
             } catch (error) {
-                console.error("Erro ao buscar capa do histórico:", error);
+                console.error("Error fetching history cover:", error);
                 coverHistoric.style.backgroundImage = "url(" + defaultCoverArt + ")";
             }
         };
@@ -202,7 +206,7 @@ class Page {
                     });
                 }
             } catch (error) {
-                console.log("Erro ao buscar a capa:", error);
+                console.log("Error fetching cover:", error);
             }
         };
 
@@ -255,13 +259,31 @@ async function getStreamingData() {
         }
 
         if (data) {
+            // Normalize AzuraCast native API payload to the shape the rest of the player expects.
+            if (data.station && data.now_playing && data.now_playing.song) {
+                const np = data.now_playing;
+                data = {
+                    songtitle: np.song.title,
+                    artist: np.song.artist,
+                    albumArt: np.song.art,
+                    youtubeId: '',
+                    song_history: (data.song_history || []).map(item => ({
+                        song: item.song.title,
+                        artist: item.song.artist,
+                        youtubeId: ''
+                    })),
+                    now_playing: np,
+                    loading: false
+                };
+            }
+
             // Payload de carregamento: a API acabou de começar a monitorar
             // esta rádio. É um ESTADO, não uma música — mostrar o aviso e
             // NÃO buscar capa/letra de "Carregando...". musicaAtual fica
             // intacto para o próximo poll com dados reais processar normal.
             // (O teste da string cobre versões antigas da API sem a flag.)
             if (data.loading || (!data.artist && /^carregando/i.test(data.songtitle || ""))) {
-                document.getElementById("currentSong").textContent = "Carregando...";
+                document.getElementById("currentSong").textContent = "Loading...";
                 document.getElementById("currentArtist").textContent = RADIO_NAME;
                 return;
             }
@@ -294,7 +316,8 @@ async function getStreamingData() {
 
                 page.refreshCover(safeCurrentSong, safeCurrentArtist, data.albumArt || data.art || null);
                 page.refreshCurrentSong(safeCurrentSong, safeCurrentArtist);
-                page.refreshLyric(safeCurrentSong, safeCurrentArtist);
+                // Lyrics disabled for Quran station
+                // page.refreshLyric(safeCurrentSong, safeCurrentArtist);
 
                 const historicContainer = document.getElementById("historicSong");
                 historicContainer.innerHTML = "";
@@ -331,8 +354,8 @@ async function getStreamingData() {
                           <div class="artist"></div>
                         </div>
                       `;
-                    article.querySelector(".song").textContent = songInfo.song || "Desconhecido";
-                    article.querySelector(".artist").textContent = songInfo.artist || "Desconhecido";
+                    article.querySelector(".song").textContent = songInfo.song || "Unknown";
+                    article.querySelector(".artist").textContent = songInfo.artist || "Unknown";
 
                     // Música com clipe conhecido: o card vira um atalho para
                     // assistir o vídeo da música que já tocou
@@ -361,7 +384,8 @@ async function getStreamingData() {
             // Modo clipe — fora do guard de música nova: a API resolve o
             // youtubeId de forma assíncrona e ele pode chegar num poll
             // seguinte, com a mesma música
-            handleClipTrack(data, safeCurrentSong, safeCurrentArtist);
+            // Clip mode disabled for Quran station
+            // handleClipTrack(data, safeCurrentSong, safeCurrentArtist);
         }
     } catch (error) {
         console.log("Erro ao buscar dados de streaming:", error);
@@ -553,7 +577,7 @@ async function fetchStreamingData(apiUrl) {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log("Erro ao buscar dados de streaming da API:", error);
+    console.log("Error fetching streaming data:", error);
     return null; // Retorna null em caso de erro
   }
 }
@@ -704,7 +728,7 @@ function setPlayerIcon(iconClass, label) {
 
 // On play, change the button to pause
 audio.onplay = function () {
-    setPlayerIcon('fa fa-pause', 'PAUSAR');
+    setPlayerIcon('fa fa-pause', 'PAUSE');
 }
 
 // On pause, change the button to play (a menos que estejamos exibindo o
@@ -716,7 +740,7 @@ audio.onpause = function () {
 
 // Enquanto o áudio estiver em buffer, mostra o spinner girando
 audio.addEventListener('waiting', function () {
-    if (!audio.paused) setPlayerIcon('fa fa-spinner fa-spin', 'CARREGANDO');
+    if (!audio.paused) setPlayerIcon('fa fa-spinner fa-spin', 'LOADING');
 });
 
 // Áudio voltou a fluir de verdade: reseta as tentativas de reconexão e
@@ -725,7 +749,7 @@ audio.addEventListener('playing', function () {
     isIntentionalPause = false;
     reconnectAttempts = 0;
     if (reconnectTimeout) clearTimeout(reconnectTimeout);
-    setPlayerIcon('fa fa-pause', 'PAUSAR');
+    setPlayerIcon('fa fa-pause', 'PAUSE');
 });
 
 // Unmute when volume changed
@@ -750,7 +774,7 @@ function handleConnectionDrop() {
 
     if (reconnectAttempts < 5) {
         reconnectAttempts++;
-        setPlayerIcon('fa fa-spinner fa-spin', 'RECONECTANDO');
+        setPlayerIcon('fa fa-spinner fa-spin', 'RECONNECTING');
         var delay = reconnectAttempts * 2000;
 
         reconnectTimeout = setTimeout(function () {

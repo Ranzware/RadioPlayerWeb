@@ -1,10 +1,10 @@
 {
-  "name": "Jailson Webradio",
-  "short_name": "Jailson Webradio",
+  "name": "MP3Islam Quran Radio",
+  "short_name": "MP3Islam Quran",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#0b0e13",
-  "theme_color": "#0b0e13",
+  "background_color": "#0b2e1e",
+  "theme_color": "#0b2e1e",
   "icons": [
     {
       "src": "img/cover.png",

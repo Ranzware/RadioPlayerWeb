@@ -1,30 +1,30 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Radio Player HTML5 — Player de Rádio Online para Site | Icecast, Shoutcast, Zeno.FM</title>
-    <meta name="description" content="Player de rádio HTML5 grátis para o seu site: música tocando agora com capa do álbum, letra da música, histórico, clipe do YouTube e app instalável (PWA). Compatível com Icecast, Shoutcast, Zeno.FM e Azuracast — sem chave de API.">
-    <meta name="keywords" content="radio player, player de rádio, rádio online, html5 radio player, web radio, icecast, shoutcast, zeno fm, azuracast, streaming de rádio, now playing, pwa">
-    <link rel="canonical" href="https://jailsonsb2.github.io/RadioPlayer/">
+    <title>MP3Islam Quran Radio — Listen to Quran Recitations 24/7</title>
+    <meta name="description" content="Listen to Quran recitations 24/7 on MP3Islam Quran Radio. A clean HTML5 player powered by AzuraCast, with live now-playing metadata and PWA support.">
+    <meta name="keywords" content="quran radio, mp3islam, quran recitation, islamic radio, azuracast, html5 radio player, web radio, now playing, pwa">
+    <link rel="canonical" href="https://radio.mp3islam.com/">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Radio Player HTML5 — Player de Rádio Online para Site">
-    <meta property="og:description" content="Player de rádio HTML5 grátis: now playing com capa, letra, histórico, clipe do YouTube e PWA. Icecast, Shoutcast, Zeno.FM e Azuracast.">
-    <meta property="og:url" content="https://jailsonsb2.github.io/RadioPlayer/">
-    <meta property="og:image" content="https://jailsonsb2.github.io/RadioPlayer/img/cover.png">
+    <meta property="og:title" content="MP3Islam Quran Radio — Listen to Quran Recitations 24/7">
+    <meta property="og:description" content="Listen to Quran recitations 24/7 on MP3Islam Quran Radio. A clean HTML5 player powered by AzuraCast.">
+    <meta property="og:url" content="https://radio.mp3islam.com/">
+    <meta property="og:image" content="https://radio.mp3islam.com/img/cover.png">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#0b0e13">
+    <meta name="theme-color" content="#0b2e1e">
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Radio Player HTML5",
-        "url": "https://jailsonsb2.github.io/RadioPlayer/",
+        "name": "MP3Islam Quran Radio",
+        "url": "https://radio.mp3islam.com/",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "Web",
         "offers": { "@type": "Offer", "price": "0" },
-        "description": "Player de rádio HTML5 para sites: now playing com capa do álbum, letra da música, histórico, clipe do YouTube e PWA. Compatível com Icecast, Shoutcast, Zeno.FM e Azuracast.",
+        "description": "Listen to Quran recitations 24/7 on MP3Islam Quran Radio. A clean HTML5 player powered by AzuraCast, with live now-playing metadata and PWA support.",
         "author": { "@type": "Person", "name": "Jailson Bezerra", "url": "https://github.com/jailsonsb2" }
     }
     </script>
@@ -46,12 +46,12 @@
     </div>
 
     <button type="button" id="installPwaBtn" class="install-btn" hidden>
-        <i class="fa fa-download"></i> Instalar app
+        <i class="fa fa-download"></i> Install app
     </button>
 
     <main class="app">
         <header class="masthead">
-            <span id="radioName">Radio Player</span>
+            <span id="radioName">MP3Islam Quran Radio</span>
         </header>
 
         <section class="player">
@@ -60,9 +60,9 @@
             </div>
 
             <div class="player-info">
-                <span class="live-badge"><span class="live-dot"></span> AO VIVO</span>
-                <h1 id="currentSong" class="text-uppercase">Música</h1>
-                <h2 id="currentArtist" class="text-capitalize">Artista</h2>
+                <span class="live-badge"><span class="live-dot"></span> LIVE</span>
+                <h1 id="currentSong" class="text-uppercase">Quran Recitation</h1>
+                <h2 id="currentArtist" class="text-capitalize">Reciter</h2>
 
                 <div class="controls">
                     <div class="control-cluster">
@@ -76,15 +76,15 @@
                             </div>
                         </div>
 
-                        <button type="button" class="play-btn" onclick="togglePlay()" aria-label="Tocar ou pausar">
+                        <button type="button" class="play-btn" onclick="togglePlay()" aria-label="Play or pause">
                             <i id="playerButton" class="fa fa-play"></i>
                         </button>
 
-                        <button type="button" class="ctrl-btn lyrics" title="Letra da música" aria-label="Letra da música">
+                        <button type="button" class="ctrl-btn lyrics" title="Lyrics" aria-label="Lyrics" hidden>
                             <i class="fa fa-music"></i>
                         </button>
 
-                        <button type="button" class="ctrl-btn clip-toggle" title="Clipe da música" aria-label="Clipe da música" hidden>
+                        <button type="button" class="ctrl-btn clip-toggle" title="Music video" aria-label="Music video" hidden>
                             <i class="fa fa-youtube-play"></i>
                         </button>
                     </div>
@@ -94,76 +94,31 @@
         </section>
 
         <section class="historic">
-            <h2 class="section-title">Tocadas recentemente</h2>
+            <h2 class="section-title">Recently Played</h2>
             <div class="history-list" id="historicSong">
                 <article>
                     <div class="cover-historic"></div>
                     <div class="music-info">
-                        <div class="song">Música</div>
-                        <div class="artist">Artista</div>
+                        <div class="song">Recitation</div>
+                        <div class="artist">Reciter</div>
                     </div>
                 </article>
                 <article>
                     <div class="cover-historic"></div>
                     <div class="music-info">
-                        <div class="song">Música</div>
-                        <div class="artist">Artista</div>
+                        <div class="song">Recitation</div>
+                        <div class="artist">Reciter</div>
                     </div>
                 </article>
             </div>
         </section>
 
-        <footer class="partner">
-            <a href="https://www.radios.com.br/" target="_blank" rel="noopener">
-                <img src="img/radiosnet.png" alt="Ouça nossa rádio com RadiosNet — baixe agora o app" width="234" height="60">
-            </a>
-        </footer>
+        
     </main>
-
-    <div id="modalLyrics" role="dialog" aria-modal="true" aria-labelledby="lyricsSong" aria-hidden="true">
-        <div class="modal-card">
-            <header>
-                <h3 id="lyricsSong">Letra</h3>
-                <button type="button" class="modal-close" aria-label="Fechar">
-                    <i class="fa fa-times"></i>
-                </button>
-            </header>
-            <div id="lyric"></div>
-        </div>
-    </div>
 
     <script type="text/javascript" src="js/script.js"></script>
     <script>
-        // Modal de letra (o script sinaliza que há letra disponível
-        // colocando data-toggle no botão .lyrics)
-        (function () {
-            var modal = document.getElementById('modalLyrics');
-            var openButton = document.querySelector('.lyrics');
-
-            function closeModal() {
-                modal.style.display = 'none';
-                modal.setAttribute('aria-hidden', 'true');
-                document.body.classList.remove('modal-open');
-            }
-
-            openButton.addEventListener('click', function (event) {
-                event.preventDefault();
-                if (!openButton.hasAttribute('data-toggle')) return; // sem letra disponível
-                modal.style.display = 'flex';
-                modal.setAttribute('aria-hidden', 'false');
-                document.body.classList.add('modal-open');
-            });
-
-            modal.addEventListener('click', function (event) {
-                if (event.target === modal) closeModal();
-            });
-            modal.querySelector('.modal-close').addEventListener('click', closeModal);
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape') closeModal();
-            });
-        })();
-
-        // Popover de volume (abre no clique do botão circular, fecha ao clicar fora)
+        // Volume popover controls
         (function () {
             var wrap = document.querySelector('.volume-wrap');
             var toggle = document.querySelector('.volume-toggle');
